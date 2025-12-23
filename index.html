@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sâm Nguyễn Hotel – Khách sạn tại Vũng Tàu</title>
+    <meta
+      name="description"
+      content="Sâm Nguyễn Hotel – khách sạn sạch sẽ, tiện nghi tại Vũng Tàu. Xem phòng, hình ảnh và liên hệ lễ tân nhanh chóng."
+    />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <h1>Sâm Nguyễn Hotel</h1>
+      <p class="hotel-address">49 Lê Ngọc Hân, TP. Vũng Tàu</p>
+    </header>
+
+    <main class="container">
+      <section class="section">
+        <h2 class="section-title">Chào mừng quý khách</h2>
+        <p>
+          Khách sạn sạch sẽ, tiện nghi, vị trí thuận tiện cho nghỉ ngơi, du lịch
+          và công tác ngắn ngày.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Phòng nghỉ</h2>
+        <div class="room-list" id="roomList"></div>
+      </section>
+    </main>
+
+    <!-- MODAL ROOM DETAIL -->
+    <div class="room-modal" id="roomModal">
+      <div class="room-modal-content">
+        <button class="modal-close" id="modalClose">×</button>
+
+        <div class="room-main-image">
+          <img id="roomImg" src="" alt="" />
+        </div>
+
+        <div class="room-thumbs" id="roomGallery"></div>
+
+        <div class="modal-body">
+          <h2 id="modalLabel"></h2>
+          <div class="modal-name" id="modalName"></div>
+
+          <div class="modal-meta">
+            <span id="modalSize"></span> •
+            <span id="modalView"></span>
+          </div>
+
+          <div class="modal-price" id="modalPrice"></div>
+
+          <ul class="modal-features" id="modalFeatures"></ul>
+
+          <div class="modal-note">
+            Giá hiển thị mang tính tham khảo. Vui lòng liên hệ lễ tân để xác
+            nhận phòng trống và giá chính xác.
+          </div>
+
+          <div class="modal-actions">
+            <a href="tel:0900000000" class="btn-call">Gọi lễ tân</a>
+            <a
+              href="https://zalo.me/0900000000"
+              target="_blank"
+              class="btn-zalo"
+              >Zalo</a
+            >
+            <a
+              href="https://maps.google.com/?q=49%20Lê%20Ngọc%20Hân%20Vũng%20Tàu"
+              target="_blank"
+              class="btn-map"
+              >Chỉ đường</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p><strong>Sâm Nguyễn Hotel</strong></p>
+      <p>49 Lê Ngọc Hân, TP. Vũng Tàu</p>
+      <p>Liên hệ lễ tân để được hỗ trợ nhanh</p>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
