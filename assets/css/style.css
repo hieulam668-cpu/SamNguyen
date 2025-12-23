@@ -1,0 +1,272 @@
+:root {
+  --primary: #daa520;
+  --accent: #194639;
+  --text: #333;
+  --muted: #777;
+  --bg: #f7f7f7;
+  --white: #fff;
+  --radius: 10px;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.header {
+  background: var(--white);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--accent);
+}
+
+.hotel-address {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 16px;
+}
+
+.section {
+  margin-top: 24px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.room-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.room-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid transparent;
+  transition: transform 0.18s ease, box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.room-card:active {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+}
+
+@media (hover: hover) {
+  .room-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+  }
+}
+
+.room-thumb {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+}
+
+.room-info {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room-name {
+  font-weight: 600;
+}
+
+.room-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.room-price {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* MODAL */
+.room-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 9999;
+}
+
+.room-modal.show {
+  display: block;
+}
+
+.room-modal-content {
+  background: var(--white);
+  height: 100%;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-close {
+  position: fixed;
+  top: 10px;
+  right: 12px;
+  font-size: 28px;
+  background: none;
+  border: none;
+  z-index: 10000;
+}
+
+/* MAIN IMAGE */
+.room-main-image {
+  width: 100%;
+  height: 36vh;
+  max-height: 280px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+}
+
+.room-main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+/* THUMBNAILS */
+.room-thumbs {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  overflow-x: auto;
+}
+
+.room-thumbs img {
+  width: 70px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 6px;
+  opacity: 0.6;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.room-thumbs img.active {
+  opacity: 1;
+  border-color: var(--primary);
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+.modal-body h2 {
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+}
+
+.modal-name {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.modal-meta {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.modal-price {
+  margin: 10px 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.modal-features {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.modal-features li {
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-note {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 10px;
+}
+
+/* ACTIONS */
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.modal-actions a {
+  text-align: center;
+  padding: 12px 8px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.btn-call {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-zalo {
+  background: #0068ff;
+  color: #fff;
+}
+.btn-map {
+  background: #eee;
+  color: #333;
+}
+
+.footer {
+  margin-top: 40px;
+  padding: 20px 12px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #777;
+  background: #f7f7f7;
+}
