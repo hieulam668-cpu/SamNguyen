@@ -1,0 +1,281 @@
+/* ===============================
+   ROOT VARIABLES (THEME)
+================================ */
+:root {
+  --primary: #daa520; /* vàng luxury */
+  --accent: #194639; /* xanh đậm */
+  --dark: #222;
+  --text: #333;
+  --light: #f7f3e8;
+  --white: #ffffff;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.12);
+
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 16px;
+  --space-lg: 24px;
+}
+
+/* ===============================
+   RESET + BASE
+================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: var(--light);
+  color: var(--text);
+  line-height: 1.5;
+}
+/* ===============================
+   CONTAINER
+================================ */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: var(--space-md);
+}
+
+/* ===============================
+   HEADER
+================================ */
+.header {
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-md);
+}
+
+.header h1 {
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+/* ===============================
+   SECTION
+================================ */
+.section {
+  margin-top: var(--space-lg);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  margin-bottom: var(--space-sm);
+  color: var(--dark);
+}
+
+/* ===============================
+   ROOM LIST
+================================ */
+.room-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+/* ===============================
+   ROOM CARD
+================================ */
+.room-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.room-card:active {
+  transform: scale(0.98);
+}
+
+/* ===============================
+   ROOM IMAGE
+================================ */
+.room-thumb {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===============================
+   ROOM INFO
+================================ */
+.room-info {
+  padding: var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.room-price {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+/* ===============================
+   ROOM CARD INTERACTION (MOBILE FIRST)
+================================ */
+
+/* trạng thái bình thường */
+.room-card {
+  border: 1px solid transparent;
+  transition: transform 0.18s ease, box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+/* MOBILE: khi chạm */
+.room-card:active {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* DESKTOP: khi hover */
+@media (hover: hover) {
+  .room-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* ===============================
+   MODAL FULL (MOBILE FIRST)
+================================ */
+
+.room-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 999;
+}
+
+.room-modal.show {
+  display: block;
+}
+
+.room-modal-content {
+  background: var(--white);
+  height: 100%;
+  overflow-y: auto;
+  animation: modalUp 0.25s ease;
+}
+
+/* animation mở từ dưới lên */
+@keyframes modalUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* nút đóng */
+.modal-close {
+  position: fixed;
+  top: 10px;
+  right: 12px;
+  font-size: 28px;
+  background: none;
+  border: none;
+  z-index: 1000;
+}
+
+/* ảnh */
+.modal-image {
+  height: 240px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* nội dung */
+.modal-body {
+  padding: 16px;
+}
+
+.modal-name {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.modal-meta {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.modal-price {
+  margin: 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.modal-features {
+  list-style: none;
+  padding-left: 0;
+}
+
+.modal-features li {
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* ===== MAIN IMAGE (FIXED FRAME) ===== */
+.room-main-image {
+  width: 100%;
+  height: 36vh; /* KHUNG CỐ ĐỊNH */
+  max-height: 280px; /* CHẶN TRÊN MOBILE LỚN */
+  padding: 8px 12px;
+  background: #f5f5f5;
+  box-sizing: border-box;
+}
+
+.room-main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* CẮT NHẸ – KHÔNG MÉO */
+  object-position: center; /* GIỮ TRUNG TÂM */
+  border-radius: 10px;
+}
+
+/* ===== THUMBNAILS ===== */
+.room-thumbs {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  overflow-x: auto;
+}
+
+.room-thumbs img {
+  width: 70px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.6;
+  border: 2px solid transparent;
+}
+
+.room-thumbs img.active {
+  opacity: 1;
+  border-color: #daa520;
+}
