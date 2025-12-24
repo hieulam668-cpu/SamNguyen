@@ -1,93 +1,358 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SÂM NGUYỄN HOTEL - Danh Thiếp Điện Tử</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <title>Sâm Nguyễn Hotel – Khách sạn tại Vũng Tàu</title>
-    <meta
-      name="description"
-      content="Sâm Nguyễn Hotel – khách sạn sạch sẽ, tiện nghi tại Vũng Tàu. Xem phòng, hình ảnh và liên hệ lễ tân nhanh chóng."
-    />
+   
+    <style>
+        /* ========================================= */
+        /* 1. BIẾN COLOR & THIẾT LẬP CHUNG           */
+        /* ========================================= */
+        :root {
+            --primary: #daa520;    /* Vàng Gold */
+            --accent: #194639;     /* Xanh đậm Luxury */
+            --light: #f7f3e8;      /* Kem nhạt nền */
+            --text: #333;          /* Chữ chính */
+            --danger: #e53935;     /* Màu đỏ giá/thông báo */
+        }
 
-    <link rel="stylesheet" href="assets/css/style.css" />
-  </head>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: "Lato", sans-serif; background: #fefefe; margin: 0; color: var(--text); }
 
-  <body>
-    <header class="header">
-      <h1>Sâm Nguyễn Hotel</h1>
-      <p class="hotel-address">49 Lê Ngọc Hân, TP. Vũng Tàu</p>
-    </header>
+        /* ========================================= */
+        /* 2. DANH SÁCH PHÒNG (ROOM LISTING)        */
+        /* ========================================= */
+        .rooms { padding: 12px 16px; max-width: 450px; margin: 0 auto; }
+        .rooms h3 { 
+            color: var(--accent); font-size: 1.2rem; 
+            border-bottom: 3px solid var(--primary); padding-bottom: 8px; 
+        }
 
-    <main class="container">
-      <section class="section">
-        <h2 class="section-title">Chào mừng quý khách</h2>
-        <p>
-          Khách sạn sạch sẽ, tiện nghi, vị trí thuận tiện cho nghỉ ngơi, du lịch
-          và công tác ngắn ngày.
-        </p>
-      </section>
+        .room-list { display: grid; gap: 12px; }
 
-      <section class="section">
-        <h2 class="section-title">Phòng nghỉ</h2>
-        <div class="room-list" id="roomList"></div>
-      </section>
-    </main>
+        /* Card phòng */
+        .room-card {
+            background: #fff; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05); border: 2px solid rgba(212,160,23,0.08);
+            cursor: pointer; position: relative; transition: all 0.2s ease;
+        }
+        .room-card:hover { transform: translateY(-4px); border-color: var(--accent); }
 
-    <!-- MODAL ROOM DETAIL -->
-    <div class="room-modal" id="roomModal">
-      <div class="room-modal-content">
-        <button class="modal-close" id="modalClose">×</button>
+        /* Ảnh đại diện phòng */
+        .room-thumb { height: 130px; background-size: cover; background-position: center; }
 
-        <div class="room-main-image">
-          <img id="roomImg" src="" alt="" />
-        </div>
+        /* --- PHẦN OVERLAY SỬA LẠI --- */
 
-        <div class="room-thumbs" id="roomGallery"></div>
+        /* Nhãn góc trên trái (Luôn hiện) */
+        .overlay-top {
+            position: absolute; top: 0px; left: 0px;
+            background: rgba(0, 0, 0, 0.7); color: #fff;
+            padding: 3px 8px; border-bottom-right-radius: 8px;
+            font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+            z-index: 5;
+        }
 
-        <div class="modal-body">
-          <h2 id="modalLabel"></h2>
-          <div class="modal-name" id="modalName"></div>
+        /* Thanh thông tin dưới ảnh (Mặc định ẩn) */
+        .room-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 36px;
+            background: rgba(0, 0, 0, 0.75); display: flex;
+            align-items: center; justify-content: space-between;
+            padding: 0 12px; color: #fff; font-size: 0.9rem; font-weight: 600;
+            z-index: 4;
+            opacity: 0; /* Ẩn đi */
+            transition: opacity 0.3s ease;
+        }
 
-          <div class="modal-meta">
-            <span id="modalSize"></span> •
-            <span id="modalView"></span>
-          </div>
+        /* Hiện overlay khi chạm hoặc hover vào card */
+        .room-card:hover .room-overlay, 
+        .room-card:active .room-overlay {
+            opacity: 1;
+        }
 
-          <div class="modal-price" id="modalPrice"></div>
+        .overlay-price { color: #ffeb3b; }  
 
-          <ul class="modal-features" id="modalFeatures"></ul>
+        /* ========================================= */
+        /* 3. MODAL CHI TIẾT PHÒNG (FULL SCREEN)    */
+        /* ========================================= */
+        .modal-full {
+            display: none; position: fixed; inset: 0; z-index: 1100;
+            background: #fff; overflow-y: auto;
+        }
 
-          <div class="modal-note">
-            Giá hiển thị mang tính tham khảo. Vui lòng liên hệ lễ tân để xác
-            nhận phòng trống và giá chính xác.
-          </div>
+        .modal-inner { max-width: 450px; margin: 0 auto; padding-bottom: 80px; }
 
-          <div class="modal-actions">
-            <a href="tel:0900000000" class="btn-call">Gọi lễ tân</a>
-            <a
-              href="https://zalo.me/0900000000"
-              target="_blank"
-              class="btn-zalo"
-              >Zalo</a
-            >
-            <a
-              href="https://maps.google.com/?q=49%20Lê%20Ngọc%20Hân%20Vũng%20Tàu"
-              target="_blank"
-              class="btn-map"
-              >Chỉ đường</a
-            >
-          </div>
-        </div>
-      </div>
+        .close-modal {
+            position: fixed; top: 12px; right: 12px; width: 40px; height: 40px;
+            border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; cursor: pointer; z-index: 1200;
+        }
+
+        .modal-header-img { width: 100%; height: 220px; object-fit: cover; }
+
+        #roomGallery { 
+            display: flex; gap: 8px; overflow-x: auto; 
+            padding: 12px 16px; background: #f9f9f9; border-bottom: 1px solid #eee; 
+        }
+        .gallery-item { 
+            flex-shrink: 0; width: 100px; height: 70px; 
+            object-fit: cover; border-radius: 6px; border: 2px solid transparent; 
+        }
+        .gallery-item.active { border-color: var(--primary); }
+
+        .modal-content { padding: 16px; }
+        .room-title-box { display: flex; justify-content: space-between; align-items: center; }
+        #newPrice { font-size: 1.3rem; font-weight: 700; color: var(--danger); }
+        #oldPrice { text-decoration: line-through; color: #888; font-size: 0.8rem; }
+
+        .amenities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .amenity-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #555; }
+        .amenity-item i { color: var(--primary); width: 18px; text-align: center; }
+
+        .price-table { margin-top: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+        .price-table h5 { background: var(--accent); color: #fff; margin: 0; padding: 10px; text-align: center; }
+        .price-row { display: flex; padding: 10px; border-bottom: 1px solid #f4f4f4; justify-content: space-between; }
+        .price-row .val { font-weight: 700; color: var(--danger); }
+
+        .modal-footer {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 450px; background: #fff; padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px;
+        }
+        .btn-booking {
+            flex: 1; background: var(--accent); color: #fff; text-align: center;
+            padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rooms">
+        <h3><i class="fa-solid fa-bed"></i> DANH SÁCH PHÒNG</h3>
+        <div class="room-list" id="roomContainer">
+            </div>
     </div>
 
-    <footer class="footer">
-      <p><strong>Sâm Nguyễn Hotel</strong></p>
-      <p>49 Lê Ngọc Hân, TP. Vũng Tàu</p>
-      <p>Liên hệ lễ tân để được hỗ trợ nhanh</p>
-    </footer>
+    <div class="modal-full" id="roomModal">
+        <div class="close-modal" onclick="closeRoom()">×</div>
+        
+        <div class="modal-inner">
+            <img id="roomImg" class="modal-header-img" src="" alt="Room image" />
+            <div id="roomGallery"></div>
 
-    <script src="assets/js/main.js"></script>
-  </body>
+            <div class="modal-content">
+                <div class="room-title-box">
+                    <h4 id="roomTitle" style="margin:0; color:var(--accent);"></h4>
+                    <div style="text-align: right;">
+                        <span id="oldPrice"></span>
+                        <div id="newPrice"></div>
+                    </div>
+                </div>
+
+                <p id="roomDesc" style="margin-top: 10px;"></p>
+
+                <div class="support-section">
+                    <h5 style="margin-bottom:8px;"><i class="fa-solid fa-star"></i> Tiện nghi phòng</h5>
+                    <div class="amenities-grid" id="roomAmenities"></div>
+                </div>
+
+                <div class="price-table">
+                    <h5>BẢNG GIÁ CHI TIẾT</h5>
+                    <div class="price-row">
+                        <span>Thuê 3 giờ đầu:</span>
+                        <span id="pHour" class="val"></span>
+                    </div>
+                    <div class="price-row">
+                        <span>Trọn ngày (14h-12h):</span>
+                        <span id="pFull" class="val"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a id="zaloLink" href="#" target="_blank" class="btn-booking">
+                <i class="fa-brands fa-whatsapp"></i> ĐẶT PHÒNG QUA ZALO
+            </a>
+        </div>
+    </div>
+
+    <script>
+        /* ========================================= */
+        /* JS 1. DATABASE - DỮ LIỆU PHÒNG            */
+        /* ========================================= */
+        const rooms = [
+    {
+        id: "1G",
+        label: "STANDARD",
+        name: "Phòng 1 Giường",
+        images: ["standard-1.jpg", "standard-2.jpg", "standard-3.jpg","standard-4.jpg","standard-5.jpg"],
+        thumb: "https://samnguyenhotel.com/wp-content/uploads/2025/11/room-image-1.jpg",
+        desc: "Phòng tiêu chuẩn dành cho 2 người, không gian ấm cúng, đầy đủ tiện nghi.",
+        amenities:  [
+      "minibar",
+      "Wifi",
+      "thang máy",
+      "chỗ đậu xe",
+      "netfix",
+      "Nước uống chào mừng"
+    ],
+        prices: [80000, 250000, 300000]
+    },
+    {
+        id: "2G",
+        label: "DELUXE",
+        name: "Phòng 2 Giường",
+        images: ["deluxe-1.jpg", "deluxe-2.jpg","deluxe-3.jpg","deluxe-4.jpg","deluxe-5.jpg"],
+        thumb: "https://samnguyenhotel.com/wp-content/uploads/2025/11/room-image-2.jpg",
+        desc: "Phòng rộng rãi với 2 giường lớn, phù hợp cho gia đình hoặc nhóm bạn.",
+        amenities: [
+      "minibar",
+      "Wifi",
+      "thang máy",
+      "chỗ đậu xe",
+      "netfix",
+      "Nước uống chào mừng"
+    ],
+        prices: [120000, 400000, 500000]
+    },
+    {
+        id: "3G",
+        label: "FAMILY",
+        name: "Phòng 3 Giường",
+        images: ["family-1.jpg","family-2.jpg","family-3.jpg"],
+        thumb: "https://samnguyenhotel.com/wp-content/uploads/2025/11/room-image-3.jpg",
+        desc: "Phòng gia đình diện tích lớn, sức chứa lên đến 6 người lớn.",
+        amenities: [
+      "minibar",
+      "Wifi",
+      "thang máy",
+      "chỗ đậu xe",
+      "netfix",
+      "Nước uống chào mừng"
+    ],
+        prices: [150000, 500000, 650000]
+    },
+    {
+        id: "VIP",
+        label: "LUXURY",
+        name: "Phòng VIP Luxury",
+        images: ["vip-1.jpg","vip-2.jpg","vip-3.jpg","vip-4.jpg","vip-5.jpg","vip-6.jpg"],
+        thumb: "https://samnguyenhotel.com/wp-content/uploads/2025/11/room-image-vip.jpg",
+        desc: "Hạng phòng sang trọng bậc nhất với nội thất cao cấp và không gian riêng tư.",
+        amenities: [
+      "Bồn tắm massage",
+      "Netflix",
+      "Nước uống chào mừng",
+      "nước nóng nlmt",
+      "....."
+    ],
+        prices: [200000, 600000, 800000]
+    },
+    {
+        id: "APT",
+        label: "STUDIO",
+        name: "Căn Hộ Mini",
+        images: ["apartment-1.jpg","apartment-2.jpg","apartment-3.jpg","apartment-4.jpg","apartment-5.jpg","apartment-6.jpg","apartment-7.jpg","apartment-8.jpg","apartment-9.jpg","apartment-10.jpg"],
+        thumb: "https://samnguyenhotel.com/wp-content/uploads/2025/11/room-image-apt.jpg",
+        desc: "Căn hộ đầy đủ tiện nghi với bếp nấu ăn riêng, phù hợp thuê dài hạn.",
+        amenities: ["Bếp nhỏ", "phòng khác riêng", "các thiết bị sinh hoạt cơ bản"],
+        prices: [250000, 700000, 900000]
+    }
+];
+
+        /* ========================================= */
+        /* JS 2. CÁC HÀM BỔ TRỢ (HELPER)             */
+        /* ========================================= */
+        
+        // Định dạng tiền tệ VND
+        function formatVND(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        // Tạo danh sách thẻ phòng khi web vừa tải xong
+        function renderRoomList() {
+    const container = document.getElementById('roomContainer');
+    container.innerHTML = rooms.map(room => `
+        <div class="room-card" onclick="openRoom('${room.id}')">
+            <div class="overlay-top">${room.label}</div>
+            
+            <div class="room-thumb" style="background-image: url('${room.thumb}')"></div>
+            
+            <div class="room-overlay">
+                <span class="overlay-title">${room.name}</span>
+                <span class="overlay-price">${formatVND(room.prices[1])}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+        /* ========================================= */
+        /* JS 3. XỬ LÝ ĐÓNG/MỞ MODAL                 */
+        /* ========================================= */
+        
+        function openRoom(id) {
+            const room = rooms.find(r => r.id === id);
+            if (!room) return;
+
+            // Đổ thông tin văn bản
+            document.getElementById('roomTitle').innerText = room.name;
+            document.getElementById('roomDesc').innerText = room.desc;
+            document.getElementById('roomImg').src = room.thumb;
+            
+            // Đổ giá
+            document.getElementById('newPrice').innerText = formatVND(room.prices[1]);
+            document.getElementById('oldPrice').innerText = formatVND(room.prices[2]);
+            document.getElementById('pHour').innerText = formatVND(room.prices[0]);
+            document.getElementById('pFull').innerText = formatVND(room.prices[1]);
+
+            // Xử lý Gallery (ảnh nhỏ)
+            const gallery = document.getElementById('roomGallery');
+            gallery.innerHTML = room.images.map(img => `
+                <img class="gallery-item" 
+                     src="https://samnguyenhotel.com/wp-content/uploads/2025/11/${img}" 
+                     onclick="changeMainImg(this)">
+            `).join('');
+
+            // Xử lý Icon tiện nghi tự động
+            const amenContainer = document.getElementById('roomAmenities');
+            amenContainer.innerHTML = room.amenities.map(a => {
+                let icon = "fa-check"; // Icon mặc định
+                if(a.toLowerCase().includes("wifi")) icon = "fa-wifi";
+                if(a.toLowerCase().includes("tivi")) icon = "fa-tv";
+                if(a.toLowerCase().includes("nước")) icon = "fa-bottle-water";
+                return `<div class="amenity-item"><i class="fa-solid ${icon}"></i><span>${a}</span></div>`;
+            }).join('');
+
+            // Gán link Zalo (thay số điện thoại của bạn)
+            document.getElementById('zaloLink').href = "https://zalo.me/0908845284";
+
+            // Hiển thị Modal
+            document.getElementById('roomModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Chống cuộn trang nền
+        }
+
+        // Hàm đổi ảnh chính khi nhấn vào gallery
+        function changeMainImg(el) {
+            document.getElementById('roomImg').src = el.src;
+            // Xóa viền các ảnh khác, thêm viền cho ảnh đang chọn
+            document.querySelectorAll('.gallery-item').forEach(img => img.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Đóng Modal
+        function closeRoom() {
+            document.getElementById('roomModal').style.display = 'none';
+            document.body.style.overflow = ''; // Cho phép cuộn lại trang nền
+        }
+
+        // Chạy khởi tạo khi trang sẵn sàng
+        window.onload = renderRoomList;
+    </script>
+</body>
 </html>
